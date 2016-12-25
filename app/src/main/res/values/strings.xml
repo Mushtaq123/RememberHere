@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">RememberHere</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="confirm">Continua</string>
+    <string name="err_insert">Errore nell\'inserimento</string>
+    <string name="ok_insert">Inserimento corretto</string>
+    <string name="ok_delete">Poi cancellato</string>
+    <string name="string_note">Aggiunti una nota</string>
+    <string name="ok">OK</string>
+    <string name="delete">Cancella</string>
+    <string name="delete_confirm">Sei sicuro di volerlo fare?</string>
+    <string name="cancel">Annulla</string>
+</resources>
