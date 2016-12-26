@@ -225,7 +225,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback, OnClien
     @Override
     public void onClick(View itemView, ProximityPOI poi) {
         LatLng here = new LatLng(poi.getLatitude(), poi.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(here, 16));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(here, 17));
     }
 
     @Override
