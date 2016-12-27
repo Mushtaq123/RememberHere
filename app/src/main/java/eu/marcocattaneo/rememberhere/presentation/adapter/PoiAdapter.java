@@ -9,15 +9,16 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import eu.marcocattaneo.rememberhere.business.callback.OnPoiListListener;
+import eu.marcocattaneo.rememberhere.R;
+import eu.marcocattaneo.rememberhere.business.callback.OnListListener;
 import eu.marcocattaneo.rememberhere.business.models.ProximityPOI;
 
 public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.PoiViewHolder> {
     private List<ProximityPOI> elements;
 
-    private OnPoiListListener onClickListener;
+    private OnListListener onClickListener;
 
-    public PoiAdapter(List<ProximityPOI> pois, OnPoiListListener onClickListener) {
+    public PoiAdapter(List<ProximityPOI> pois, OnListListener onClickListener) {
         this.elements = pois;
         this.onClickListener = onClickListener;
     }
@@ -29,7 +30,7 @@ public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.PoiViewHolder> {
     @Override
     public PoiViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
 
-        View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(android.R.layout.simple_list_item_1, viewGroup, false);
+        View itemView = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.adapter_poilist, viewGroup, false);
 
         return new PoiViewHolder(itemView);
     }
@@ -85,12 +86,12 @@ public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.PoiViewHolder> {
 
     public static class PoiViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView title, meta;
+        public TextView title;
 
         public PoiViewHolder(View itemView) {
             super(itemView);
 
-            title = (TextView) itemView.findViewById(android.R.id.text1);
+            title = (TextView) itemView.findViewById(R.id.adapter_note);
 
         }
     }

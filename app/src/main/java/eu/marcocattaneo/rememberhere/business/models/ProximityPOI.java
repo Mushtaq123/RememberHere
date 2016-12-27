@@ -14,6 +14,10 @@ public class ProximityPOI extends RealmObject {
 
     private double longitude;
 
+    private boolean done = false;
+
+    private boolean expired = false;
+
     private int radius;
 
     public String getGuid() {
@@ -54,5 +58,21 @@ public class ProximityPOI extends RealmObject {
 
     public void setRadius(int radius) {
         this.radius = radius;
+    }
+
+    public boolean isDone() {
+        return done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
+    }
+
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
     }
 }

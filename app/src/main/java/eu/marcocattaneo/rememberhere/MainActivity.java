@@ -9,7 +9,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
@@ -19,9 +18,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import eu.marcocattaneo.rememberhere.presentation.DashBoardActivity;
+import eu.marcocattaneo.rememberhere.presentation.base.BaseActivity;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int PERMISSION_REQUEST = 493;
 
@@ -59,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
      */
     private void onPermissionGranted() {
         preferences.edit().putBoolean(PREF_LOGGED, true).apply();
-        Intent intent = new Intent(this, DashBoardActivity.class);
+        Intent intent = new Intent(this, ContainerActivity.class);
         startActivity(intent);
         finish();
     }

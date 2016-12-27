@@ -4,7 +4,7 @@ import android.view.View;
 
 import eu.marcocattaneo.rememberhere.business.models.ProximityPOI;
 
-public interface OnPoiListListener {
+public interface OnListListener {
 
     void onClick(View itemView, ProximityPOI poi);
 

@@ -10,4 +10,6 @@
     <string name="delete">Cancella</string>
     <string name="delete_confirm">Sei sicuro di volerlo fare?</string>
     <string name="cancel">Annulla</string>
+    <string name="confirm_submit">Aggiungi</string>
+    <string name="hint_note">Promemoria</string>
 </resources>

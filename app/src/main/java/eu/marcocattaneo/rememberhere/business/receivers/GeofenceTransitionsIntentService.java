@@ -5,8 +5,6 @@ import android.app.NotificationManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
@@ -72,7 +70,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
                 Uri sound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notifysnd);
                 mBuilder.setSound(sound);
 
-                mBuilder.setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
+                mBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
 
 
                 mNotifyMgr.notify(mNotificationId, mBuilder.build());
