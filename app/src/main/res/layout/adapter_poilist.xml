@@ -9,6 +9,7 @@
         android:id="@+id/adapter_note"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/layout_padding"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/adpater_icon"
         android:layout_alignParentRight="true"
@@ -19,10 +20,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/adpater_icon"
-        android:layout_marginLeft="16dp"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="16dp"/>
+        android:layout_alignParentStart="true"/>
 
 </RelativeLayout>

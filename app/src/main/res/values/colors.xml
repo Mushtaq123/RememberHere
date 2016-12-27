@@ -7,4 +7,8 @@
     <color name="white">#ffffff</color>
     <color name="circleStroke">#ff55a2ab</color>
     <color name="circleFill">#ab55a2ab</color>
+
+    <color name="buttonEnableColor">#ff9f15</color>
+    <color name="buttonDisabledColor">#ff9f15</color>
+    <color name="buttonPressedColor">#ff9f15</color>
 </resources>
