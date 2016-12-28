@@ -101,12 +101,14 @@ public class PoiListFragment extends BaseFragment implements OnQueryResult<Proxi
     }
 
     @Override
-    public void onClick(View itemView, ProximityPOI poi) {
-
+    public void onClick(View view) {
+        Intent intent = new Intent(mActivity, ContainerActivity.class);
+        intent.putExtra(ContainerActivity.EXTRA_OPERATION, ContainerActivity.OPERATION.OPEN_ADD_SECTION);
+        startActivity(intent);
     }
 
     @Override
-    public void onLongPress(View itemView, final ProximityPOI poi) {
+    public void onClickDelete(View itemView, final ProximityPOI poi) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle(R.string.delete);
         builder.setMessage(R.string.delete_confirm);
@@ -124,12 +126,5 @@ public class PoiListFragment extends BaseFragment implements OnQueryResult<Proxi
         });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-    }
-
-    @Override
-    public void onClick(View view) {
-        Intent intent = new Intent(mActivity, ContainerActivity.class);
-        intent.putExtra(ContainerActivity.EXTRA_OPERATION, ContainerActivity.OPERATION.OPEN_ADD_SECTION);
-        startActivity(intent);
     }
 }

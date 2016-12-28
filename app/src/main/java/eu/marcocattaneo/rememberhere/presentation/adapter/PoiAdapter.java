@@ -4,12 +4,15 @@ import android.content.Context;
 import android.media.Image;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +24,7 @@ import eu.marcocattaneo.rememberhere.R;
 import eu.marcocattaneo.rememberhere.business.Constants;
 import eu.marcocattaneo.rememberhere.business.callback.OnListListener;
 import eu.marcocattaneo.rememberhere.business.models.ProximityPOI;
+import eu.marcocattaneo.rememberhere.presentation.ui.CoverImageView;
 
 public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.PoiViewHolder> {
     private List<ProximityPOI> elements;
@@ -58,22 +62,15 @@ public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.PoiViewHolder> {
             holder.title.setText(item.getNote());
 
             String url = String.format(Constants.STATIC_PIC,500,200,item.getLatitude(), item.getLongitude(), 12, mContext.getString(R.string.google_maps_key) );
-
-            Picasso.with(mContext).load(Uri.parse(url)).into(holder.streetPic);
+            holder.streetPic.setCover(url, true);
         }
 
         if (onClickListener != null) {
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+
+            holder.deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onClickListener.onClick(holder.itemView, item);
-                }
-            });
-            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    onClickListener.onLongPress(holder.itemView, item);
-                    return false;
+                    onClickListener.onClickDelete(holder.itemView, item);
                 }
             });
         }
@@ -108,14 +105,19 @@ public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.PoiViewHolder> {
 
         public TextView title;
 
-        private ImageView streetPic;
+        private CoverImageView streetPic;
+
+        private AppCompatButton deleteButton;
 
         public PoiViewHolder(View itemView) {
             super(itemView);
 
             title = (TextView) itemView.findViewById(R.id.adapter_note);
 
-            streetPic = (ImageView) itemView.findViewById(R.id.adapter_streetpic);
+            streetPic = (CoverImageView) itemView.findViewById(R.id.adapter_streetpic);
+
+            deleteButton = (AppCompatButton) itemView.findViewById(R.id.adapter_deletebtn);
+            deleteButton.setSupportBackgroundTintList(ContextCompat.getColorStateList(itemView.getContext(), R.color.button_color_selector));
 
         }
     }
@@ -123,7 +125,7 @@ public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.PoiViewHolder> {
     private void setAnimation(View viewToAnimate, int position) {
         // If the bound view wasn't previously displayed on screen, it's animated
         if (position > lastPosition) {
-            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.slide_from_top);
+            Animation animation = AnimationUtils.loadAnimation(mContext, android.R.anim.slide_in_left);
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
         }

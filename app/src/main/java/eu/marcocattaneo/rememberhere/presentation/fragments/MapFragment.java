@@ -1,6 +1,8 @@
 package eu.marcocattaneo.rememberhere.presentation.fragments;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -14,8 +16,13 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -29,6 +36,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.util.List;
 
 import eu.marcocattaneo.rememberhere.R;
+import eu.marcocattaneo.rememberhere.business.callback.OnActivityForResultCallback;
 import eu.marcocattaneo.rememberhere.business.callback.OnClientAPIListener;
 import eu.marcocattaneo.rememberhere.business.callback.OnQueryResult;
 import eu.marcocattaneo.rememberhere.business.controllers.ProximityController;
@@ -36,7 +44,7 @@ import eu.marcocattaneo.rememberhere.business.models.ProximityPOI;
 import eu.marcocattaneo.rememberhere.presentation.base.BaseActivity;
 import eu.marcocattaneo.rememberhere.presentation.base.BaseFragment;
 
-public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnClientAPIListener, OnQueryResult<ProximityPOI>, BottomSheetPlaceFragment.OnBottomSheetCallback {
+public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnClientAPIListener, OnQueryResult<ProximityPOI>, BottomSheetPlaceFragment.OnBottomSheetCallback, OnActivityForResultCallback {
 
     public static MapFragment newInstance() {
 
@@ -46,6 +54,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnC
         fragment.setArguments(args);
         return fragment;
     }
+
+    public static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 321;
 
     private GoogleMap mMap;
 
@@ -74,6 +84,17 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnC
         super.onViewCreated(view, savedInstanceState);
 
         setBackEnable(true);
+
+        try {
+            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(mActivity);
+            mActivity.startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+        } catch (GooglePlayServicesRepairableException e) {
+            // TODO: Handle the error.
+        } catch (GooglePlayServicesNotAvailableException e) {
+            // TODO: Handle the error.
+        }
+
+        mActivity.addOnActivityForResult(PLACE_AUTOCOMPLETE_REQUEST_CODE, this);
     }
 
     @Override
@@ -130,6 +151,13 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnC
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        mActivity.removeOnActivityForResult(PLACE_AUTOCOMPLETE_REQUEST_CODE);
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
 
@@ -166,5 +194,21 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnC
 
     }
 
+    @Override
+    public void onActivityForResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Place place = PlaceAutocomplete.getPlace(mActivity, data);
+
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 15));
+
+            } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
+                Status status = PlaceAutocomplete.getStatus(mActivity, data);
+
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
+        }
+    }
 }
 

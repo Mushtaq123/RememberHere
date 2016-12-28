@@ -11,4 +11,6 @@
     <color name="buttonEnableColor">#ff9f15</color>
     <color name="buttonDisabledColor">#ff9f15</color>
     <color name="buttonPressedColor">#ff9f15</color>
+    <color name="darkGrey">#666666</color>
+    <color name="black">#333333</color>
 </resources>

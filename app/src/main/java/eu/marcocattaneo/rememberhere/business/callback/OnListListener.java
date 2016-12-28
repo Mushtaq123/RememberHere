@@ -6,7 +6,6 @@ import eu.marcocattaneo.rememberhere.business.models.ProximityPOI;
 
 public interface OnListListener {
 
-    void onClick(View itemView, ProximityPOI poi);
+    void onClickDelete(View itemView, ProximityPOI poi);
 
-    void onLongPress(View itemView, ProximityPOI poi);
 }
