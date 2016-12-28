@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#55b53f</color>
-    <color name="colorPrimaryDark">#327723</color>
-    <color name="colorAccent">#d98611</color>
-    <color name="colorAccentDark">#ff9f15</color>
+    <color name="colorPrimary">#ff8f68</color>
+    <color name="colorPrimaryDark">#fd7453</color>
+    <color name="colorAccent">#3fbc5f</color>
+    <color name="colorAccentDark">#0f8a23</color>
     <color name="white">#ffffff</color>
-    <color name="circleStroke">#ff55a2ab</color>
-    <color name="circleFill">#ab55a2ab</color>
+    <color name="circleStroke">#ff2dc3d6</color>
+    <color name="circleFill">#7f2dc3d6</color>
 
     <color name="buttonEnableColor">#ff9f15</color>
     <color name="buttonDisabledColor">#ff9f15</color>

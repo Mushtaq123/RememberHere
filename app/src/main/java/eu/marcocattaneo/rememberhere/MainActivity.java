@@ -26,8 +26,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private static final int RC_SIGN_IN = 343;
 
-    private GoogleApiClient mGoogleApiClient;
-
     private static final String PREF_LOGGED = "pref:login";
     private SharedPreferences preferences;
 
@@ -121,8 +119,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-
     }
 
     @Override

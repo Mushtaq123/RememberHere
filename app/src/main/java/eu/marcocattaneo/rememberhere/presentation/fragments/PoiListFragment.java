@@ -93,7 +93,7 @@ public class PoiListFragment extends BaseFragment implements OnQueryResult<Proxi
     @Override
     public void onData(List<ProximityPOI> data) {
         if (mAdapter == null) {
-            mAdapter = new PoiAdapter(data, this);
+            mAdapter = new PoiAdapter(mActivity, data, this);
             poiList.setAdapter(mAdapter);
         } else {
             mAdapter.swapItems(data);
