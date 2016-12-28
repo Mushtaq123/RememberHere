@@ -10,7 +10,7 @@ import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
-public class BaseController {
+public class BaseController implements RealmChangeListener<RealmResults<ProximityPOI>> {
 
     private Context mContext;
 
@@ -20,11 +20,40 @@ public class BaseController {
         this.mContext = context;
     }
 
+    // Query listener
+
+    private RealmResults<ProximityPOI> list;
+
+    private OnQueryResult<ProximityPOI> mOnQueryResult;
+
+    /**
+     * Find poi sorted by done variable
+     *
+     * @param onQueryResult
+     */
+    public void findProximityPOI(final OnQueryResult<ProximityPOI> onQueryResult) {
+        if (mOnQueryResult == null)
+            mOnQueryResult = onQueryResult;
+
+        if (list == null) {
+            list = getDao().findPoiSorted("done", Sort.ASCENDING);
+
+            list.addChangeListener(this);
+        }
+
+        // First time
+        onQueryResult.onData(list);
+    }
+
     public Context getContext() {
         return mContext;
     }
 
     public void onStop() {
+        if (list != null)
+            list.removeChangeListener(this);
+        list = null;
+        mOnQueryResult = null;
         proximityDao.close();
     }
 
@@ -34,24 +63,6 @@ public class BaseController {
 
     protected ProximityDaoImpl getDao() {
         return proximityDao;
-    }
-
-    /**
-     * Find poi sorted by done variable
-     *
-     * @param onQueryResult
-     */
-    public void findProximityPOI(final OnQueryResult<ProximityPOI> onQueryResult) {
-        RealmResults<ProximityPOI> list = getDao().findPoiSorted("done", Sort.ASCENDING);
-        list.addChangeListener(new RealmChangeListener<RealmResults<ProximityPOI>>() {
-            @Override
-            public void onChange(RealmResults<ProximityPOI> element) {
-                onQueryResult.onData(element);
-            }
-        });
-
-        // First time
-        onQueryResult.onData(list);
     }
 
     /**
@@ -81,4 +92,8 @@ public class BaseController {
         getDao().setExpired(proximityPOI);
     }
 
+    @Override
+    public void onChange(RealmResults<ProximityPOI> element) {
+        mOnQueryResult.onData(element);
+    }
 }

@@ -16,7 +16,7 @@ public class ProximityDao implements ProximityDaoImpl {
     }
 
     @Override
-    public ProximityPOI create(String guid, String note, int radius, double longitude, double latitude) {
+    public ProximityPOI create(String guid, String note, int radius, double latitude, double longitude) {
         mRealm.beginTransaction();
 
         ProximityPOI proximityPOI = mRealm.createObject(ProximityPOI.class, guid);

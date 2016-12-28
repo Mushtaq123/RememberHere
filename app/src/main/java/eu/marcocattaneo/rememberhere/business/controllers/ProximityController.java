@@ -59,7 +59,7 @@ public class ProximityController extends BaseController implements GoogleApiClie
             public void onResult(@NonNull Status status) {
                 if (status.isSuccess()) {
 
-                    getDao().create(guid, note,  RADIUS_METERS, latitude, longitude);
+                    getDao().create(guid, note, RADIUS_METERS, latitude, longitude);
 
                 } else {
                     Toast.makeText(getContext(), R.string.err_insert, Toast.LENGTH_SHORT).show();

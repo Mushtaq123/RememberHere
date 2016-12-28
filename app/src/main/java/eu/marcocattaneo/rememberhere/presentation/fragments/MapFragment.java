@@ -102,9 +102,6 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnC
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        if (mMap != null)
-            onMapReady(mMap);
     }
 
     @Override
@@ -121,10 +118,10 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnC
             return;
         LatLng here = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
         mMap.addMarker(new MarkerOptions().position(here).title("YOU ARE HERE").icon(getMarkerIcon("#327723")));
+
         if (moveCamera)
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(here, 14));
     }
-
 
     public BitmapDescriptor getMarkerIcon(String color) {
         float[] hsv = new float[3];
@@ -135,6 +132,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnC
     @Override
     public void onStop() {
         super.onStop();
+
+        mController.onStop();
     }
 
     @Override
@@ -148,9 +147,10 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnC
     }
 
     @Override
-    public void onData(List<ProximityPOI> data) {
+    public void onData(List<ProximityPOI> proximityList) {
         mMap.clear();
-        for (ProximityPOI poi : data) {
+
+        for (ProximityPOI poi : proximityList) {
 
             mMap.addCircle(new CircleOptions()
                     .center(new LatLng(poi.getLatitude(), poi.getLongitude()))
@@ -161,7 +161,10 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnC
             );
 
         }
+
         putMyPosition(false);
+
     }
+
 }
 
