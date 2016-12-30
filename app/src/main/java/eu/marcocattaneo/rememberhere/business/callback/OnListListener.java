@@ -8,4 +8,6 @@ public interface OnListListener {
 
     void onClickDelete(View itemView, ProximityPOI poi);
 
+    void onClickMap(View itemView, ProximityPOI poi);
+
 }

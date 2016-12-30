@@ -88,6 +88,7 @@ public class PoiListFragment extends BaseFragment implements OnQueryResult<Proxi
         super.onStop();
 
         // Prevent error with adapter on Realm
+        mAdapter = null;
         poiList.setAdapter(null);
         controller.onStop();
     }
@@ -106,6 +107,14 @@ public class PoiListFragment extends BaseFragment implements OnQueryResult<Proxi
     public void onClick(View view) {
         Intent intent = new Intent(mActivity, ContainerActivity.class);
         intent.putExtra(ContainerActivity.EXTRA_OPERATION, ContainerActivity.OPERATION.OPEN_ADD_SECTION);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onClickMap(View itemView, ProximityPOI poi) {
+        Intent intent = new Intent(mActivity, ContainerActivity.class);
+        intent.putExtra(ContainerActivity.EXTRA_OPERATION, ContainerActivity.OPERATION.OPEN_ADD_SECTION);
+        intent.putExtra(ContainerActivity.EXTRA_GUID, poi.getGuid());
         startActivity(intent);
     }
 

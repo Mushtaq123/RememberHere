@@ -66,14 +66,20 @@ public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.PoiViewHolder> {
             } else {
                 holder.icon.setColorFilter(mContext.getResources().getColor(item.isExpired() ? R.color.task_expired_color : R.color.task_new_color));
             }
-            //holder.icon.setColorFilter(mContext.getResources().getColor(item.isDone() ? R.color.colorAccentDark : R.color.black));
             holder.title.setText(item.getNote());
 
-            String url = String.format(Constants.STATIC_PIC,500,200,item.getLatitude(), item.getLongitude(), 12, mContext.getString(R.string.google_maps_key) );
+            String url = String.format(Constants.STATIC_PIC,500,200,item.getLatitude(), item.getLongitude(), 15, mContext.getString(R.string.google_maps_key) );
             holder.streetPic.setCover(url, true);
         }
 
         if (onClickListener != null) {
+
+            holder.streetPic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onClickListener.onClickMap(holder.itemView, item);
+                }
+            });
 
             holder.deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override

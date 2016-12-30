@@ -49,9 +49,11 @@ import eu.marcocattaneo.rememberhere.presentation.base.BaseFragment;
 
 public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnClientAPIListener, OnQueryResult<ProximityPOI>, BottomSheetPlaceFragment.OnBottomSheetCallback, OnActivityForResultCallback {
 
-    public static MapFragment newInstance() {
+    public static MapFragment newInstance(String guid) {
 
         Bundle args = new Bundle();
+        if (guid != null)
+            args.putString("guid", guid);
 
         MapFragment fragment = new MapFragment();
         fragment.setArguments(args);
@@ -68,6 +70,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnC
     private LatLng currentLatLon;
     private LatLng here;
 
+    private String guid = null;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +79,8 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnC
         mActivity = getBaseActivity();
 
         mController = new ProximityController(mActivity, this);
+
+        guid = getArguments().getString("guid", null);
     }
 
     @Nullable
@@ -164,7 +170,11 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnC
         mMap.addMarker(new MarkerOptions().position(here).title("YOU ARE HERE").icon(getMarkerIcon("#327723")));
 
         if (moveCamera)
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(here, 14));
+            moveCamera(here);
+    }
+
+    private void moveCamera(LatLng position) {
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 16));
     }
 
     public BitmapDescriptor getMarkerIcon(String color) {
@@ -189,7 +199,15 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnC
 
     @Override
     public void onConnect(GoogleApiClient client) {
-        putMyPosition(true);
+        if (guid == null)
+            putMyPosition(true);
+        else {
+            ProximityPOI poi = mController.findProximityPOIByGuid(guid);
+            if (poi != null) {
+                LatLng latLng = new LatLng(poi.getLatitude(), poi.getLongitude());
+                moveCamera(latLng);
+            }
+        }
     }
 
     @Override

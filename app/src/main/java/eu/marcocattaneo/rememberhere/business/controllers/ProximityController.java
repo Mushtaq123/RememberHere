@@ -28,7 +28,7 @@ import eu.marcocattaneo.rememberhere.business.receivers.GeofenceTransitionsInten
 
 public class ProximityController extends BaseController implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
-    public static final int RADIUS_METERS = 50;
+    public static final int RADIUS_METERS = 80;
 
     private PendingIntent mPendingIntent;
 

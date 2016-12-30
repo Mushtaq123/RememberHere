@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#ff8f68</color>
-    <color name="colorPrimaryDark">#fd7453</color>
-    <color name="colorAccent">#3fbc5f</color>
-    <color name="colorAccentDark">#0f8a23</color>
+    <color name="colorPrimary">#4e556f</color>
+    <color name="colorPrimaryDark">#3a4258</color>
+    <color name="colorAccent">#ff7773</color>
+    <color name="colorAccentDark">#dd6966</color>
     <color name="white">#ffffff</color>
 
-    <color name="buttonEnableColor">#ff9f15</color>
-    <color name="buttonDisabledColor">#ff9f15</color>
-    <color name="buttonPressedColor">#ff9f15</color>
+    <color name="buttonEnableColor">#ff7773</color>
+    <color name="buttonDisabledColor">#592b29</color>
+    <color name="buttonPressedColor">#dd6966</color>
     <color name="darkGrey">#666666</color>
     <color name="black">#333333</color>
 
     <color name="task_expired_color">#c3c3c3</color>
     <color name="task_new_color">#000000</color>
-    <color name="task_done_color">@color/colorAccent</color>
+    <color name="task_done_color">#0f8a23</color>
 
     <color name="activeCircleStroke">#ff2dc3d6</color>
     <color name="activeCircleFill">#2a2dc3d6</color>
