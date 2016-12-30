@@ -16,6 +16,8 @@ public interface ProximityDaoImpl {
 
     RealmResults<ProximityPOI> findPoiSorted(String field, Sort sort);
 
+    ProximityPOI findByGuid(String guid);
+
     void close();
 
 }

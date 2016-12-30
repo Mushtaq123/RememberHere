@@ -58,7 +58,15 @@ public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.PoiViewHolder> {
 
         final ProximityPOI item = getPoi(position);
 
+
         if (item != null) {
+
+            if (item.isDone()) {
+                holder.icon.setColorFilter(mContext.getResources().getColor(R.color.task_done_color));
+            } else {
+                holder.icon.setColorFilter(mContext.getResources().getColor(item.isExpired() ? R.color.task_expired_color : R.color.task_new_color));
+            }
+            //holder.icon.setColorFilter(mContext.getResources().getColor(item.isDone() ? R.color.colorAccentDark : R.color.black));
             holder.title.setText(item.getNote());
 
             String url = String.format(Constants.STATIC_PIC,500,200,item.getLatitude(), item.getLongitude(), 12, mContext.getString(R.string.google_maps_key) );
@@ -109,10 +117,14 @@ public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.PoiViewHolder> {
 
         private AppCompatButton deleteButton;
 
+        private ImageView icon;
+
         public PoiViewHolder(View itemView) {
             super(itemView);
 
             title = (TextView) itemView.findViewById(R.id.adapter_note);
+
+            icon = (ImageView) itemView.findViewById(R.id.adapter_icon);
 
             streetPic = (CoverImageView) itemView.findViewById(R.id.adapter_streetpic);
 

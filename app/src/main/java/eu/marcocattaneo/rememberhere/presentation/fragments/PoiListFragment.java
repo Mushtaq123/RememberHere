@@ -87,6 +87,8 @@ public class PoiListFragment extends BaseFragment implements OnQueryResult<Proxi
     public void onStop() {
         super.onStop();
 
+        // Prevent error with adapter on Realm
+        poiList.setAdapter(null);
         controller.onStop();
     }
 

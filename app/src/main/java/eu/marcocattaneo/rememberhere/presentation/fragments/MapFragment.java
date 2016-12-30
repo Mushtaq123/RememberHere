@@ -8,9 +8,11 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -31,6 +33,7 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
@@ -63,6 +66,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnC
     private ProximityController mController;
 
     private LatLng currentLatLon;
+    private LatLng here;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -84,15 +88,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnC
         super.onViewCreated(view, savedInstanceState);
 
         setBackEnable(true);
-
-        try {
-            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(mActivity);
-            mActivity.startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
-        } catch (GooglePlayServicesRepairableException e) {
-            // TODO: Handle the error.
-        } catch (GooglePlayServicesNotAvailableException e) {
-            // TODO: Handle the error.
-        }
+        setHasOptionsMenu(true);
 
         mActivity.addOnActivityForResult(PLACE_AUTOCOMPLETE_REQUEST_CODE, this);
     }
@@ -112,6 +108,33 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnC
         });
 
         mController.findProximityPOI(this);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_search, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.search:
+                try {
+                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).setBoundsBias(new LatLngBounds(here, here)).build(mActivity);
+                    mActivity.startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+                } catch (GooglePlayServicesRepairableException e) {
+                } catch (GooglePlayServicesNotAvailableException e) {
+                }
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+
     }
 
     @Override
@@ -137,7 +160,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnC
         Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mController.getGoogleApiClient());
         if (mLastLocation == null)
             return;
-        LatLng here = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+        here = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
         mMap.addMarker(new MarkerOptions().position(here).title("YOU ARE HERE").icon(getMarkerIcon("#327723")));
 
         if (moveCamera)
@@ -180,13 +203,23 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnC
 
         for (ProximityPOI poi : proximityList) {
 
-            mMap.addCircle(new CircleOptions()
-                    .center(new LatLng(poi.getLatitude(), poi.getLongitude()))
-                    .radius(ProximityController.RADIUS_METERS)
-                    .strokeWidth(1)
-                    .strokeColor(getContext().getResources().getColor(R.color.circleStroke))
-                    .fillColor(getContext().getResources().getColor(R.color.circleFill))
-            );
+            if (poi.isExpired()) {
+                mMap.addCircle(new CircleOptions()
+                        .center(new LatLng(poi.getLatitude(), poi.getLongitude()))
+                        .radius(ProximityController.RADIUS_METERS)
+                        .strokeWidth(1)
+                        .strokeColor(getContext().getResources().getColor(R.color.disableCircleStroke))
+                        .fillColor(getContext().getResources().getColor(R.color.disableCircleFill))
+                );
+            } else {
+                mMap.addCircle(new CircleOptions()
+                        .center(new LatLng(poi.getLatitude(), poi.getLongitude()))
+                        .radius(ProximityController.RADIUS_METERS)
+                        .strokeWidth(1)
+                        .strokeColor(getContext().getResources().getColor(R.color.activeCircleStroke))
+                        .fillColor(getContext().getResources().getColor(R.color.activeCircleFill))
+                );
+            }
 
         }
 

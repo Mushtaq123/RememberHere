@@ -20,8 +20,14 @@ public abstract class BaseFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        initToolbar();
+    }
+
+    protected Toolbar initToolbar() {
+        toolbar = (Toolbar) getView().findViewById(R.id.toolbar);
         getBaseActivity().setSupportActionBar(toolbar);
+
+        return toolbar;
     }
 
     protected void setBackEnable(boolean enable) {

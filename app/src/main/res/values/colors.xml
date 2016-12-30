@@ -5,12 +5,20 @@
     <color name="colorAccent">#3fbc5f</color>
     <color name="colorAccentDark">#0f8a23</color>
     <color name="white">#ffffff</color>
-    <color name="circleStroke">#ff2dc3d6</color>
-    <color name="circleFill">#7f2dc3d6</color>
 
     <color name="buttonEnableColor">#ff9f15</color>
     <color name="buttonDisabledColor">#ff9f15</color>
     <color name="buttonPressedColor">#ff9f15</color>
     <color name="darkGrey">#666666</color>
     <color name="black">#333333</color>
+
+    <color name="task_expired_color">#c3c3c3</color>
+    <color name="task_new_color">#000000</color>
+    <color name="task_done_color">@color/colorAccent</color>
+
+    <color name="activeCircleStroke">#ff2dc3d6</color>
+    <color name="activeCircleFill">#2a2dc3d6</color>
+
+    <color name="disableCircleStroke">#ff333333</color>
+    <color name="disableCircleFill">#17333333</color>
 </resources>

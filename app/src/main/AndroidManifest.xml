@@ -23,6 +23,7 @@
             android:value="@string/google_maps_key"/>
 
         <activity
+            android:label="@string/activity_name"
             android:screenOrientation="portrait"
             android:name=".MainActivity">
             <intent-filter>
@@ -32,8 +33,15 @@
         </activity>
 
         <activity
+            android:label="@string/activity_name"
             android:name=".ContainerActivity"
             android:screenOrientation="portrait"/>
+
+        <receiver android:name=".business.receivers.NotificationReceiver">
+            <intent-filter>
+                <action android:name="eu.marcocattaneo.rememberhere.business.receivers.NotificationReceiver.done"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

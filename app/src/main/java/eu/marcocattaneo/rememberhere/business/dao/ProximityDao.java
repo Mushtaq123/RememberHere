@@ -23,6 +23,8 @@ public class ProximityDao implements ProximityDaoImpl {
         proximityPOI.setLongitude(longitude);
         proximityPOI.setLatitude(latitude);
         proximityPOI.setNote(note);
+        proximityPOI.setExpired(false);
+        proximityPOI.setDone(false);
 
         mRealm.commitTransaction();
         return proximityPOI;
@@ -61,6 +63,11 @@ public class ProximityDao implements ProximityDaoImpl {
             return mRealm.where(ProximityPOI.class).findAllSorted(field, sort);
         else
             return mRealm.where(ProximityPOI.class).findAll();
+    }
+
+    @Override
+    public ProximityPOI findByGuid(String guid) {
+        return mRealm.where(ProximityPOI.class).equalTo("guid", guid).findFirst();
     }
 
     public void close() {

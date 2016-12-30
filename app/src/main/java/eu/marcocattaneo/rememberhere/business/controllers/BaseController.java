@@ -1,6 +1,7 @@
 package eu.marcocattaneo.rememberhere.business.controllers;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 
 import eu.marcocattaneo.rememberhere.business.callback.OnQueryResult;
 import eu.marcocattaneo.rememberhere.business.dao.ProximityDao;
@@ -43,6 +44,10 @@ public class BaseController implements RealmChangeListener<RealmResults<Proximit
 
         // First time
         onQueryResult.onData(list);
+    }
+
+    public @Nullable ProximityPOI findProximityPOIByGuid(String guid) {
+        return getDao().findByGuid(guid);
     }
 
     public Context getContext() {
