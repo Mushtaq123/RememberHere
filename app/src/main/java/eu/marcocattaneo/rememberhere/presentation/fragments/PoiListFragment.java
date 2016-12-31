@@ -45,7 +45,7 @@ public class PoiListFragment extends BaseFragment implements OnQueryResult<Proxi
     private RecyclerView poiList;
     private LinearLayoutManager mLayoutManager;
 
-    private FloatingActionButton mAddButtoon;
+    private FloatingActionButton mAddButton;
 
     private ProximityController controller;
 
@@ -74,8 +74,8 @@ public class PoiListFragment extends BaseFragment implements OnQueryResult<Proxi
 
         noItemsLinear = (LinearLayout) view.findViewById(R.id.no_items);
 
-        mAddButtoon = (FloatingActionButton) view.findViewById(R.id.addPoi);
-        mAddButtoon.setOnClickListener(this);
+        mAddButton = (FloatingActionButton) view.findViewById(R.id.addPoi);
+        mAddButton.setOnClickListener(this);
 
         poiList = (RecyclerView) view.findViewById(R.id.poiList);
         mLayoutManager = new LinearLayoutManager(mActivity);
@@ -92,6 +92,11 @@ public class PoiListFragment extends BaseFragment implements OnQueryResult<Proxi
         controller.onStartRealm();
         controller.onStartGoogleAPI(null);
         controller.findProximityPOI(this);
+    }
+
+    private void checkFabVisiblity() {
+        if (mLayoutManager.findLastVisibleItemPosition() < mAdapter.getItemCount())
+            mAddButton.show();
     }
 
     @Override
@@ -161,6 +166,8 @@ public class PoiListFragment extends BaseFragment implements OnQueryResult<Proxi
                 controller.removeGeofence(poi.getGuid());
                 // Remove POI on DB
                 controller.delete(poi);
+
+                checkFabVisiblity();
             }
         });
         builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
