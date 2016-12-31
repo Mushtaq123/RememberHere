@@ -22,7 +22,7 @@ import eu.marcocattaneo.rememberhere.ContainerActivity;
 import eu.marcocattaneo.rememberhere.R;
 import eu.marcocattaneo.rememberhere.business.callback.OnListListener;
 import eu.marcocattaneo.rememberhere.business.callback.OnQueryResult;
-import eu.marcocattaneo.rememberhere.business.controllers.BaseController;
+import eu.marcocattaneo.rememberhere.business.controllers.ProximityController;
 import eu.marcocattaneo.rememberhere.business.models.ProximityPOI;
 import eu.marcocattaneo.rememberhere.presentation.SettingsActivity;
 import eu.marcocattaneo.rememberhere.presentation.adapter.PoiAdapter;
@@ -47,7 +47,7 @@ public class PoiListFragment extends BaseFragment implements OnQueryResult<Proxi
 
     private FloatingActionButton mAddButtoon;
 
-    private BaseController controller;
+    private ProximityController controller;
 
     private LinearLayout noItemsLinear;
 
@@ -59,7 +59,7 @@ public class PoiListFragment extends BaseFragment implements OnQueryResult<Proxi
 
         mActivity = getBaseActivity();
 
-        controller = new BaseController(mActivity);
+        controller = new ProximityController(mActivity);
     }
 
     @Nullable
@@ -89,7 +89,8 @@ public class PoiListFragment extends BaseFragment implements OnQueryResult<Proxi
     public void onStart() {
         super.onStart();
 
-        controller.onStart();
+        controller.onStartRealm();
+        controller.onStartGoogleAPI(null);
         controller.findProximityPOI(this);
     }
 
@@ -156,6 +157,9 @@ public class PoiListFragment extends BaseFragment implements OnQueryResult<Proxi
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                // Remove geofence
+                controller.removeGeofence(poi.getGuid());
+                // Remove POI on DB
                 controller.delete(poi);
             }
         });

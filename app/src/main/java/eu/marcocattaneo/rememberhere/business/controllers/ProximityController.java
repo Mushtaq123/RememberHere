@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -28,18 +29,24 @@ import eu.marcocattaneo.rememberhere.business.receivers.GeofenceTransitionsInten
 
 public class ProximityController extends BaseController implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
+    public static final String TAG = "ProximityController";
+
     public static final int RADIUS_METERS = 80;
 
     private PendingIntent mPendingIntent;
 
     private GoogleApiClient mGoogleApiClient;
 
-    private OnClientAPIListener mCallback;
+    private OnClientAPIListener mCallback = null;
 
-    public ProximityController(Context context, @NonNull OnClientAPIListener onClientAPIListener) {
+    public ProximityController(Context context, @Nullable OnClientAPIListener onClientAPIListener) {
         super(context);
 
         this.mCallback = onClientAPIListener;
+    }
+
+    public ProximityController(Context context) {
+        super(context);
     }
 
     public void addPOI(final double latitude, final double longitude, final String note) {
@@ -69,11 +76,12 @@ public class ProximityController extends BaseController implements GoogleApiClie
     }
 
     /**
-     * Start controller
+     * Start GoogleAPI
+     * @param onClientAPIListener
      */
-    @Override
-    public void onStart() {
-        super.onStart();
+    public void onStartGoogleAPI(@Nullable OnClientAPIListener onClientAPIListener) {
+        mCallback = onClientAPIListener;
+
         if (mGoogleApiClient == null) {
             mGoogleApiClient = new GoogleApiClient.Builder(getContext())
                     .addConnectionCallbacks(this)
@@ -83,6 +91,15 @@ public class ProximityController extends BaseController implements GoogleApiClie
 
             mGoogleApiClient.connect();
         }
+
+    }
+
+    /**
+     * Start realm
+     */
+    @Override
+    public void onStartRealm() {
+        super.onStartRealm();
     }
 
     /**
@@ -134,7 +151,8 @@ public class ProximityController extends BaseController implements GoogleApiClie
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        mCallback.onConnect(mGoogleApiClient);
+        if (mCallback != null)
+            mCallback.onConnect(mGoogleApiClient);
     }
 
     @Override
@@ -144,7 +162,29 @@ public class ProximityController extends BaseController implements GoogleApiClie
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        mCallback.onConnectionFail(connectionResult);
+        if (mCallback != null)
+            mCallback.onConnectionFail(connectionResult);
+    }
+
+    public void removeGeofence(String requestId) {
+
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+
+            List<String> listRequestId = new ArrayList<>();
+            listRequestId.add(requestId);
+
+            LocationServices.GeofencingApi.removeGeofences(
+                    mGoogleApiClient,
+                    listRequestId
+            ).setResultCallback(new ResultCallback<Status>() {
+                @Override
+                public void onResult(@NonNull Status status) {
+                    if (!status.isSuccess())
+                        Log.d(TAG, "Errore rimozione geofence");
+                }
+            });
+
+        }
     }
 
     /**

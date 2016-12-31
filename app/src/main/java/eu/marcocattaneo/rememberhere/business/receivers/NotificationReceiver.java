@@ -4,10 +4,8 @@ import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import eu.marcocattaneo.rememberhere.business.controllers.BaseController;
-import eu.marcocattaneo.rememberhere.business.controllers.ProximityController;
 import eu.marcocattaneo.rememberhere.business.models.ProximityPOI;
 
 public class NotificationReceiver extends BroadcastReceiver {
@@ -20,7 +18,7 @@ public class NotificationReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         BaseController controller = new BaseController(context);
-        controller.onStart();
+        controller.onStartRealm();
 
         ProximityPOI poi = controller.findProximityPOIByGuid(intent.getStringExtra(EXTRA_POI_GUID));
         int notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, -1);

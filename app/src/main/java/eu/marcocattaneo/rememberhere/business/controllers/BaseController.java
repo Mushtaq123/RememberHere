@@ -62,7 +62,7 @@ public class BaseController implements RealmChangeListener<RealmResults<Proximit
         proximityDao.close();
     }
 
-    public void onStart() {
+    public void onStartRealm() {
         proximityDao = new ProximityDao(mContext);
     }
 
