@@ -62,8 +62,10 @@ public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.PoiViewHolder> {
         if (item != null) {
 
             if (item.isDone()) {
+                holder.icon.setImageResource(R.drawable.ic_check_circle_black_24dp);
                 holder.icon.setColorFilter(mContext.getResources().getColor(R.color.task_done_color));
             } else {
+                holder.icon.setImageResource(R.drawable.ic_done_black_24dp);
                 holder.icon.setColorFilter(mContext.getResources().getColor(item.isExpired() ? R.color.task_expired_color : R.color.task_new_color));
             }
             holder.title.setText(item.getNote());

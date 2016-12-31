@@ -23,8 +23,6 @@ import static eu.marcocattaneo.rememberhere.business.receivers.NotificationRecei
 
 public class GeofenceTransitionsIntentService extends IntentService {
 
-    public static int notificationId = 1;
-
     private static final String GROUP_KEY_NOTIFY = "group_geofe";
 
     public static final String TAG = GeofenceTransitionsIntentService.class.getSimpleName();
@@ -67,12 +65,12 @@ public class GeofenceTransitionsIntentService extends IntentService {
             // Each results
             for (Geofence geofence : triggeringGeofences) {
 
-                int mNotificationId = notificationId++;
+                int mNotificationId = (int) Math.floor(Math.random() * 1000000);
 
                 // Pending Intent
                 Intent actionIntent = new Intent(NotificationReceiver.ACTION_NOTIFICATION_DONE);
                 actionIntent.putExtra(NotificationReceiver.EXTRA_POI_GUID, geofence.getRequestId());
-                actionIntent.putExtra(NotificationReceiver.EXTRA_NOTIFICATION_ID, notificationId);
+                actionIntent.putExtra(NotificationReceiver.EXTRA_NOTIFICATION_ID, mNotificationId);
                 PendingIntent pIntent = PendingIntent.getBroadcast(this, (int) System.currentTimeMillis(), actionIntent, 0);
 
                 // Get POI
@@ -85,7 +83,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
                 // Build notification with pendig actions
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(this)
-                                .setSmallIcon(R.mipmap.ic_launcher)
+                                .setSmallIcon(R.mipmap.ic_notify)
                                 .setContentTitle(getString(R.string.app_name))
                                 .setGroup(GROUP_KEY_NOTIFY)
                                 // Done task

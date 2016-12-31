@@ -3,22 +3,42 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator"
+    tools:context=".MainActivity"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-    <include layout="@layout/toolbar"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/poiList"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:layout_anchorGravity="center"
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"/>
+            <include layout="@layout/toolbar"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/poiList"
+                android:layout_above="@+id/toolbar"
+                android:layout_height="570dp"
+                android:layout_width="match_parent"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <include layout="@layout/view_noitems" android:id="@+id/no_items" android:visibility="gone"/>
+        </LinearLayout>
+    </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addPoi"
         app:elevation="5dp"
+        app:layout_behavior="eu.marcocattaneo.rememberhere.presentation.ui.ScrollFABBehavior"
         app:backgroundTint="@color/colorAccent"
         app:fabSize="normal"
         android:src="@drawable/ic_add_location_white_24dp"
@@ -27,4 +47,5 @@
         android:layout_margin="@dimen/layout_padding"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
 </android.support.design.widget.CoordinatorLayout>

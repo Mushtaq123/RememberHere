@@ -9,8 +9,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import java.util.List;
 
@@ -20,6 +24,7 @@ import eu.marcocattaneo.rememberhere.business.callback.OnListListener;
 import eu.marcocattaneo.rememberhere.business.callback.OnQueryResult;
 import eu.marcocattaneo.rememberhere.business.controllers.BaseController;
 import eu.marcocattaneo.rememberhere.business.models.ProximityPOI;
+import eu.marcocattaneo.rememberhere.presentation.SettingsActivity;
 import eu.marcocattaneo.rememberhere.presentation.adapter.PoiAdapter;
 import eu.marcocattaneo.rememberhere.presentation.base.BaseActivity;
 import eu.marcocattaneo.rememberhere.presentation.base.BaseFragment;
@@ -44,6 +49,8 @@ public class PoiListFragment extends BaseFragment implements OnQueryResult<Proxi
 
     private BaseController controller;
 
+    private LinearLayout noItemsLinear;
+
     private PoiAdapter mAdapter;
 
     @Override
@@ -65,14 +72,17 @@ public class PoiListFragment extends BaseFragment implements OnQueryResult<Proxi
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        noItemsLinear = (LinearLayout) view.findViewById(R.id.no_items);
+
         mAddButtoon = (FloatingActionButton) view.findViewById(R.id.addPoi);
         mAddButtoon.setOnClickListener(this);
 
         poiList = (RecyclerView) view.findViewById(R.id.poiList);
-        poiList.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(mActivity);
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         poiList.setLayoutManager(mLayoutManager);
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -81,6 +91,25 @@ public class PoiListFragment extends BaseFragment implements OnQueryResult<Proxi
 
         controller.onStart();
         controller.findProximityPOI(this);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        //inflater.inflate(R.menu.menu_settings, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            case R.id.settings:
+                Intent intent = new Intent(mActivity, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -95,6 +124,7 @@ public class PoiListFragment extends BaseFragment implements OnQueryResult<Proxi
 
     @Override
     public void onData(List<ProximityPOI> data) {
+        noItemsLinear.setVisibility(data.size() > 0 ? View.GONE : View.VISIBLE);
         if (mAdapter == null) {
             mAdapter = new PoiAdapter(mActivity, data, this);
             poiList.setAdapter(mAdapter);

@@ -98,7 +98,7 @@ public class ProximityController extends BaseController implements GoogleApiClie
                 .setRequestId(guid)
                 .setExpirationDuration(Geofence.NEVER_EXPIRE)
                 .setCircularRegion(latitude, longitude, RADIUS_METERS)
-                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT)
+                .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
                 .build());
 
         return mGeofenceList;
