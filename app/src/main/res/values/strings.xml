@@ -20,4 +20,6 @@
     <string name="tutorial_text2">Just hold on a point on the map to add your reminders</string>
     <string name="tutorial_text3">In order to use the app you must enable the permission to use your location</string>
     <string name="allow">Allow</string>
+    <string name="gps_not_avaiable">You need to have GPS enabled</string>
+    <string name="enabled">Enable</string>
 </resources>

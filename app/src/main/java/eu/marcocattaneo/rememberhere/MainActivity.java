@@ -1,160 +1,83 @@
 package eu.marcocattaneo.rememberhere;
 
-import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Build;
+import android.location.LocationManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.annotation.LayoutRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.provider.Settings;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.view.View;
-import android.widget.Toast;
-
-import com.cleveroad.slidingtutorial.Direction;
-import com.cleveroad.slidingtutorial.PageOptions;
-import com.cleveroad.slidingtutorial.TransformItem;
-import com.cleveroad.slidingtutorial.TutorialFragment;
-import com.cleveroad.slidingtutorial.TutorialOptions;
-import com.cleveroad.slidingtutorial.TutorialPageOptionsProvider;
-import com.cleveroad.slidingtutorial.TutorialSupportFragment;
 
 import eu.marcocattaneo.rememberhere.presentation.base.BaseActivity;
+import eu.marcocattaneo.rememberhere.presentation.fragments.MapFragment;
+import eu.marcocattaneo.rememberhere.presentation.fragments.PoiListFragment;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity {
 
-    private static final int PERMISSION_REQUEST = 493;
+    public static final String EXTRA_OPERATION = "container.extra.op";
+    public static final String EXTRA_GUID = "container.extra.guid";
 
-    private static final int TOTAL_PAGES = Build.VERSION.SDK_INT < Build.VERSION_CODES.M ? 2 :3;
-
-    private static final String PREF_LOGGED = "eu.marcocattaneo.rememberhere.first";
-
-    private SharedPreferences preferences;
-
-    TutorialFragment tutorialFragment;
+    private Snackbar snackbarGpsErr;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
+        setContentView(R.layout.activity_container);
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Intent intent = getIntent();
 
-        if (preferences.getBoolean(PREF_LOGGED, false))
-            onPermissionGranted();
+        int operation = intent.hasExtra(EXTRA_OPERATION) ? getIntent().getIntExtra(EXTRA_OPERATION, 1) : 1;
 
-        int[] mPagesColors = new int[]{
-                ContextCompat.getColor(this, R.color.colorPrimary),
-                ContextCompat.getColor(this, R.color.colorAccent),
-                ContextCompat.getColor(this, R.color.white)
-        };
+        switch (operation) {
 
-        final TutorialOptions tutorialOptions = TutorialFragment.newTutorialOptionsBuilder(this)
-                .setUseInfiniteScroll(false)
-                .setPagesColors(mPagesColors)
-                .setPagesCount(TOTAL_PAGES)
-                .setTutorialPageProvider(new TutorialPagesProvider())
-                .setOnSkipClickListener(new View.OnClickListener() {
+            case OPERATION.OPEN_LIST_SECTION:
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, PoiListFragment.newInstance()).commit();
+                break;
+
+            case OPERATION.OPEN_ADD_SECTION:
+                getSupportFragmentManager().beginTransaction().replace(R.id.container, MapFragment.newInstance(intent.hasExtra(EXTRA_GUID) ? intent.getStringExtra(EXTRA_GUID) : null)).commit();
+                break;
+
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE );
+        if (manager.isProviderEnabled(LocationManager.GPS_PROVIDER)  || manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            hidGPSAlert();
+        } else {
+            showGPSAlert();
+        }
+    }
+
+    public static class OPERATION {
+
+        public static final int OPEN_LIST_SECTION = 1;
+
+        public static final int OPEN_ADD_SECTION = 2;
+
+    }
+
+    private void showGPSAlert() {
+        snackbarGpsErr = Snackbar.make(findViewById(R.id.mainActivity_coordinator), getString(R.string.gps_not_avaiable), Snackbar.LENGTH_INDEFINITE)
+                .setAction(getString(R.string.enabled), new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        tutorialFragment.getViewPager().setCurrentItem(TOTAL_PAGES - 1);
-                        tutorialFragment.getSkipButton().setVisibility(View.GONE);
+                        startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                        hidGPSAlert();
                     }
-                })
-                .build();
-
-        tutorialFragment =  TutorialSupportFragment.newInstance(tutorialOptions);
-        getFragmentManager().beginTransaction().replace(R.id.container, tutorialFragment).commit();
+                });
+        snackbarGpsErr.show();
     }
 
-    /**
-     * Permission granted
-     */
-    private void onPermissionGranted() {
-        preferences.edit().putBoolean(PREF_LOGGED, true).apply();
-        Intent intent = new Intent(this, ContainerActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-    private void requestPermissionAndOpen() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST);
-
-        } else {
-            onPermissionGranted();
-        }
-    }
-
-    @Override
-    public void onClick(View view) {
-
-        switch (view.getId()) {
-
-            case R.id.permission:
-                requestPermissionAndOpen();
-                break;
-
-        }
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        switch (requestCode) {
-
-            case PERMISSION_REQUEST:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    onPermissionGranted();
-                } else {
-                    Toast.makeText(this, "Permessi necessari. ", Toast.LENGTH_LONG).show();
-                    finish();
-                }
-                break;
-
-        }
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    private static final class TutorialPagesProvider implements TutorialPageOptionsProvider {
-
-        @NonNull
-        @Override
-        public PageOptions provide(int position) {
-            @LayoutRes int pageLayoutResId;
-
-            TransformItem[] tutorialItems = new TransformItem[]{
-                    TransformItem.create(R.id.image, Direction.LEFT_TO_RIGHT, 0.06f),
-            };
-            switch (position) {
-                case 0: {
-                    pageLayoutResId = R.layout.fragment_tutorial1;
-                    break;
-                }
-                case 1: {
-                    pageLayoutResId = Build.VERSION.SDK_INT < Build.VERSION_CODES.M ? R.layout.fragment_tutorial2_button : R.layout.fragment_tutorial2;
-                    break;
-                }
-                case 2: {
-                    pageLayoutResId = R.layout.fragment_tutorial3;
-                    break;
-                }
-                default: {
-                    throw new IllegalArgumentException("Unknown position: " + position);
-                }
-            }
-
-            return PageOptions.create(pageLayoutResId, position, tutorialItems);
-        }
+    private void hidGPSAlert() {
+        if (snackbarGpsErr != null)
+            snackbarGpsErr.dismiss();
     }
 
 }
-

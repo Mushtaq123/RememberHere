@@ -13,6 +13,7 @@
 
         <EditText
             android:id="@+id/bottom_dial_editext"
+            android:imeOptions="actionDone"
             android:hint="@string/hint_note"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

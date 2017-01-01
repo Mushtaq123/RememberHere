@@ -21,4 +21,6 @@
     <string name="tutorial_text2">Basta tenere premuto su un punto della mappa per aggiungere il tuo promemoria</string>
     <string name="tutorial_text3">Per poter utilizzare l\'app è necessario abilitare il permesso all\'uso della tua posizione</string>
     <string name="allow">Permetti</string>
+    <string name="gps_not_avaiable">E\' necessario avere il GPS abilitato</string>
+    <string name="enabled">Abilita</string>
 </resources>

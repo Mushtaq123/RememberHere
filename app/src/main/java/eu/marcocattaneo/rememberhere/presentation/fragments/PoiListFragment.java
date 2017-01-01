@@ -18,7 +18,7 @@ import android.widget.LinearLayout;
 
 import java.util.List;
 
-import eu.marcocattaneo.rememberhere.ContainerActivity;
+import eu.marcocattaneo.rememberhere.MainActivity;
 import eu.marcocattaneo.rememberhere.R;
 import eu.marcocattaneo.rememberhere.business.callback.OnListListener;
 import eu.marcocattaneo.rememberhere.business.callback.OnQueryResult;
@@ -135,16 +135,16 @@ public class PoiListFragment extends BaseFragment implements OnQueryResult<Proxi
 
     @Override
     public void onClick(View view) {
-        Intent intent = new Intent(mActivity, ContainerActivity.class);
-        intent.putExtra(ContainerActivity.EXTRA_OPERATION, ContainerActivity.OPERATION.OPEN_ADD_SECTION);
+        Intent intent = new Intent(mActivity, MainActivity.class);
+        intent.putExtra(MainActivity.EXTRA_OPERATION, MainActivity.OPERATION.OPEN_ADD_SECTION);
         startActivity(intent);
     }
 
     @Override
     public void onClickMap(View itemView, ProximityPOI poi) {
-        Intent intent = new Intent(mActivity, ContainerActivity.class);
-        intent.putExtra(ContainerActivity.EXTRA_OPERATION, ContainerActivity.OPERATION.OPEN_ADD_SECTION);
-        intent.putExtra(ContainerActivity.EXTRA_GUID, poi.getGuid());
+        Intent intent = new Intent(mActivity, MainActivity.class);
+        intent.putExtra(MainActivity.EXTRA_OPERATION, MainActivity.OPERATION.OPEN_ADD_SECTION);
+        intent.putExtra(MainActivity.EXTRA_GUID, poi.getGuid());
         startActivity(intent);
     }
 
