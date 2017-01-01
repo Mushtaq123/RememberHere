@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">remember here</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="confirm">Continua</string>
+    <string name="err_insert">Errore nell\'inserimento</string>
+    <string name="ok_insert">Inserimento corretto</string>
+    <string name="ok_delete">Promemoria cancellato</string>
+    <string name="string_note">Aggiunti una nota</string>
+    <string name="ok">OK</string>
+    <string name="delete">Cancella</string>
+    <string name="delete_confirm">Sei sicuro di volerlo fare?</string>
+    <string name="cancel">Annulla</string>
+    <string name="confirm_submit">Aggiungi</string>
+    <string name="hint_note">Promemoria</string>
+    <string name="search">Cerca</string>
+    <string name="activity_name">remember here</string>
+    <string name="task_done">Fatto</string>
+    <string name="no_items">Nessuna nota presente</string>
+    <string name="tutorial_text1">Ricordarsi cosa fare in funzione di dove si è..</string>
+    <string name="tutorial_text2">Basta tenere premuto su un punto della mappa per aggiungere il tuo promemoria</string>
+    <string name="tutorial_text3">Per poter utilizzare l\'app è necessario abilitare il permesso all\'uso della tua posizione</string>
+    <string name="allow">Permetti</string>
+</resources>
