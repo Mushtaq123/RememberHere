@@ -129,7 +129,12 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnC
 
             case R.id.search:
                 try {
-                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).setBoundsBias(new LatLngBounds(here, here)).build(mActivity);
+                    Intent intent;
+                    if (here != null) {
+                        intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).setBoundsBias(new LatLngBounds(here, here)).build(mActivity);
+                    } else {
+                        intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(mActivity);
+                    }
                     mActivity.startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
                 } catch (GooglePlayServicesRepairableException e) {
                 } catch (GooglePlayServicesNotAvailableException e) {

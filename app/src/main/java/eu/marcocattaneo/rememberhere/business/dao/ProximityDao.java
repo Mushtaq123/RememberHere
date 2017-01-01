@@ -2,6 +2,8 @@ package eu.marcocattaneo.rememberhere.business.dao;
 
 import android.content.Context;
 
+import java.util.Date;
+
 import eu.marcocattaneo.rememberhere.business.models.ProximityPOI;
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -23,6 +25,8 @@ public class ProximityDao implements ProximityDaoImpl {
         proximityPOI.setLongitude(longitude);
         proximityPOI.setLatitude(latitude);
         proximityPOI.setNote(note);
+        proximityPOI.setCreateDate(new Date());
+        proximityPOI.setUpdateDate(new Date());
         proximityPOI.setExpired(false);
         proximityPOI.setDone(false);
 
@@ -44,6 +48,7 @@ public class ProximityDao implements ProximityDaoImpl {
         mRealm.beginTransaction();
 
         proximityPOI.setDone(true);
+        proximityPOI.setUpdateDate(new Date());
 
         mRealm.commitTransaction();
     }
@@ -53,6 +58,7 @@ public class ProximityDao implements ProximityDaoImpl {
         mRealm.beginTransaction();
 
         proximityPOI.setExpired(true);
+        proximityPOI.setUpdateDate(new Date());
 
         mRealm.commitTransaction();
     }

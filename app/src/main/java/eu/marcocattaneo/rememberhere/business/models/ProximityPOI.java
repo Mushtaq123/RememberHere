@@ -1,7 +1,10 @@
 package eu.marcocattaneo.rememberhere.business.models;
 
+import java.util.Date;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
 
 public class ProximityPOI extends RealmObject {
 
@@ -17,6 +20,10 @@ public class ProximityPOI extends RealmObject {
     private boolean done = false;
 
     private boolean expired = false;
+
+    private Date createDate;
+
+    private Date updateDate;
 
     private int radius;
 
@@ -74,5 +81,21 @@ public class ProximityPOI extends RealmObject {
 
     public void setExpired(boolean expired) {
         this.expired = expired;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
     }
 }
