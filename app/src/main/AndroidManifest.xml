@@ -50,10 +50,6 @@
             android:name="io.fabric.ApiKey"
             android:value="b3fe9a5e13292074278b775603d182da08174d38"/>
 
-        <activity
-            android:name=".presentation.SettingsActivity"
-            android:label="@string/title_activity_settings">
-        </activity>
     </application>
 
 </manifest>

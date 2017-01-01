@@ -1,33 +1,43 @@
 package eu.marcocattaneo.rememberhere;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.cleveroad.slidingtutorial.Direction;
+import com.cleveroad.slidingtutorial.PageOptions;
+import com.cleveroad.slidingtutorial.TransformItem;
+import com.cleveroad.slidingtutorial.TutorialFragment;
+import com.cleveroad.slidingtutorial.TutorialOptions;
+import com.cleveroad.slidingtutorial.TutorialPageOptionsProvider;
+import com.cleveroad.slidingtutorial.TutorialSupportFragment;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import eu.marcocattaneo.rememberhere.presentation.base.BaseActivity;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private static final int PERMISSION_REQUEST = 493;
 
-    private static final int RC_SIGN_IN = 343;
+    private static final int TOTAL_PAGES = Build.VERSION.SDK_INT < Build.VERSION_CODES.M ? 2 :3;
 
-    private static final String PREF_LOGGED = "pref:login";
+    private static final String PREF_LOGGED = "eu.marcocattaneo.rememberhere.first";
+
     private SharedPreferences preferences;
+
+    TutorialFragment tutorialFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,16 +49,28 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         if (preferences.getBoolean(PREF_LOGGED, false))
             onPermissionGranted();
 
-        findViewById(R.id.confirm).setOnClickListener(this);
+        int[] mPagesColors = new int[]{
+                ContextCompat.getColor(this, R.color.colorPrimary),
+                ContextCompat.getColor(this, R.color.colorAccent),
+                ContextCompat.getColor(this, R.color.white)
+        };
 
-        /*GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
+        final TutorialOptions tutorialOptions = TutorialFragment.newTutorialOptionsBuilder(this)
+                .setUseInfiniteScroll(false)
+                .setPagesColors(mPagesColors)
+                .setPagesCount(TOTAL_PAGES)
+                .setTutorialPageProvider(new TutorialPagesProvider())
+                .setOnSkipClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        tutorialFragment.getViewPager().setCurrentItem(TOTAL_PAGES - 1);
+                        tutorialFragment.getSkipButton().setVisibility(View.GONE);
+                    }
+                })
                 .build();
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();*/
+        tutorialFragment =  TutorialSupportFragment.newInstance(tutorialOptions);
+        getFragmentManager().beginTransaction().replace(R.id.container, tutorialFragment).commit();
     }
 
     /**
@@ -63,9 +85,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     private void requestPermissionAndOpen() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST);
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_REQUEST);
 
         } else {
             onPermissionGranted();
@@ -77,29 +99,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         switch (view.getId()) {
 
-            case R.id.confirm:
+            case R.id.permission:
                 requestPermissionAndOpen();
-                /*Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-                startActivityForResult(signInIntent, RC_SIGN_IN);*/
                 break;
 
         }
 
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RC_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            if (result.isSuccess()) {
-                GoogleSignInAccount acct = result.getSignInAccount();
-                requestPermissionAndOpen();
-            } else {
-                Toast.makeText(this, "Error with authentication", Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     @Override
@@ -121,9 +126,37 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Toast.makeText(this, "Error with Google API connection", Toast.LENGTH_SHORT).show();
+    private static final class TutorialPagesProvider implements TutorialPageOptionsProvider {
+
+        @NonNull
+        @Override
+        public PageOptions provide(int position) {
+            @LayoutRes int pageLayoutResId;
+
+            TransformItem[] tutorialItems = new TransformItem[]{
+                    TransformItem.create(R.id.image, Direction.LEFT_TO_RIGHT, 0.06f),
+            };
+            switch (position) {
+                case 0: {
+                    pageLayoutResId = R.layout.fragment_tutorial1;
+                    break;
+                }
+                case 1: {
+                    pageLayoutResId = Build.VERSION.SDK_INT < Build.VERSION_CODES.M ? R.layout.fragment_tutorial2_button : R.layout.fragment_tutorial2;
+                    break;
+                }
+                case 2: {
+                    pageLayoutResId = R.layout.fragment_tutorial3;
+                    break;
+                }
+                default: {
+                    throw new IllegalArgumentException("Unknown position: " + position);
+                }
+            }
+
+            return PageOptions.create(pageLayoutResId, position, tutorialItems);
+        }
     }
+
 }
 

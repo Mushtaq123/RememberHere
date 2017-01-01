@@ -14,11 +14,12 @@
 
     <color name="task_expired_color">#c3c3c3</color>
     <color name="task_new_color">#000000</color>
-    <color name="task_done_color">#0f8a23</color>
+    <color name="task_done_color">@color/colorGreen</color>
 
     <color name="activeCircleStroke">#ff2dc3d6</color>
     <color name="activeCircleFill">#2a2dc3d6</color>
 
     <color name="disableCircleStroke">#ff333333</color>
     <color name="disableCircleFill">#17333333</color>
+    <color name="colorGreen">#0f8a23</color>
 </resources>

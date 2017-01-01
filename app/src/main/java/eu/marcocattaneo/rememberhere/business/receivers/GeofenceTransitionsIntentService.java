@@ -80,6 +80,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
                             return;
 
                         controller.setExpired(proximityPOI);
+                        controller.removeGeofence(proximityPOI.getGuid());
 
                         // Build notification with pendig actions
                         NotificationCompat.Builder mBuilder =

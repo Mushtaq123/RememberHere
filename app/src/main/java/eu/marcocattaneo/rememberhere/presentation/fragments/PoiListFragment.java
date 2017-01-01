@@ -24,7 +24,6 @@ import eu.marcocattaneo.rememberhere.business.callback.OnListListener;
 import eu.marcocattaneo.rememberhere.business.callback.OnQueryResult;
 import eu.marcocattaneo.rememberhere.business.controllers.ProximityController;
 import eu.marcocattaneo.rememberhere.business.models.ProximityPOI;
-import eu.marcocattaneo.rememberhere.presentation.SettingsActivity;
 import eu.marcocattaneo.rememberhere.presentation.adapter.PoiAdapter;
 import eu.marcocattaneo.rememberhere.presentation.base.BaseActivity;
 import eu.marcocattaneo.rememberhere.presentation.base.BaseFragment;
@@ -101,17 +100,12 @@ public class PoiListFragment extends BaseFragment implements OnQueryResult<Proxi
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        //inflater.inflate(R.menu.menu_settings, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-
-            case R.id.settings:
-                Intent intent = new Intent(mActivity, SettingsActivity.class);
-                startActivity(intent);
-                return true;
 
             default:
                 return super.onOptionsItemSelected(item);
