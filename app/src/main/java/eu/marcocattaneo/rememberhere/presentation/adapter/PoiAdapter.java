@@ -25,6 +25,7 @@ import eu.marcocattaneo.rememberhere.business.Constants;
 import eu.marcocattaneo.rememberhere.business.callback.OnListListener;
 import eu.marcocattaneo.rememberhere.business.models.ProximityPOI;
 import eu.marcocattaneo.rememberhere.presentation.ui.CoverImageView;
+import io.realm.RealmResults;
 
 public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.PoiViewHolder> {
     private List<ProximityPOI> elements;
@@ -35,7 +36,7 @@ public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.PoiViewHolder> {
 
     private int lastPosition = -1;
 
-    public PoiAdapter(Context context, List<ProximityPOI> pois, OnListListener onClickListener) {
+    public PoiAdapter(Context context, RealmResults<ProximityPOI> pois, OnListListener onClickListener) {
         this.elements = pois;
         this.onClickListener = onClickListener;
         this.mContext = context;
@@ -54,7 +55,7 @@ public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.PoiViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(final PoiViewHolder holder, int position) {
+    public void onBindViewHolder(final PoiViewHolder holder, final int position) {
 
         final ProximityPOI item = getPoi(position);
 
@@ -79,14 +80,14 @@ public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.PoiViewHolder> {
             holder.streetPic.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onClickListener.onClickMap(holder.itemView, item);
+                    onClickListener.onClickMap(holder.itemView, item, position);
                 }
             });
 
             holder.deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onClickListener.onClickDelete(holder.itemView, item);
+                    onClickListener.onClickDelete(holder.itemView, item, position);
                 }
             });
         }

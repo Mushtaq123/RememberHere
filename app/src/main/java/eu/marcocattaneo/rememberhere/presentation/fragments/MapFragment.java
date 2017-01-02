@@ -46,8 +46,10 @@ import eu.marcocattaneo.rememberhere.business.controllers.ProximityController;
 import eu.marcocattaneo.rememberhere.business.models.ProximityPOI;
 import eu.marcocattaneo.rememberhere.presentation.base.BaseActivity;
 import eu.marcocattaneo.rememberhere.presentation.base.BaseFragment;
+import io.realm.RealmChangeListener;
+import io.realm.RealmResults;
 
-public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnClientAPIListener, OnQueryResult<ProximityPOI>, BottomSheetPlaceFragment.OnBottomSheetCallback, OnActivityForResultCallback {
+public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnClientAPIListener, BottomSheetPlaceFragment.OnBottomSheetCallback, OnActivityForResultCallback {
 
     public static MapFragment newInstance(String guid) {
 
@@ -71,6 +73,38 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnC
     private LatLng here;
 
     private String guid = null;
+
+    private final RealmChangeListener<RealmResults<ProximityPOI>> onDataChangeLisnter = new RealmChangeListener<RealmResults<ProximityPOI>>() {
+
+        @Override
+        public void onChange(RealmResults<ProximityPOI> element) {
+            mMap.clear();
+
+            for (ProximityPOI poi : element) {
+
+                if (poi.isExpired()) {
+                    mMap.addCircle(new CircleOptions()
+                            .center(new LatLng(poi.getLatitude(), poi.getLongitude()))
+                            .radius(ProximityController.RADIUS_METERS)
+                            .strokeWidth(1)
+                            .strokeColor(getContext().getResources().getColor(R.color.disableCircleStroke))
+                            .fillColor(getContext().getResources().getColor(R.color.disableCircleFill))
+                    );
+                } else {
+                    mMap.addCircle(new CircleOptions()
+                            .center(new LatLng(poi.getLatitude(), poi.getLongitude()))
+                            .radius(ProximityController.RADIUS_METERS)
+                            .strokeWidth(1)
+                            .strokeColor(getContext().getResources().getColor(R.color.activeCircleStroke))
+                            .fillColor(getContext().getResources().getColor(R.color.activeCircleFill))
+                    );
+                }
+
+            }
+
+            putMyPosition(false);
+        }
+    };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -113,7 +147,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnC
             }
         });
 
-        mController.findProximityPOI(this);
+        mController.findProximityPOI(onDataChangeLisnter);
     }
 
     @Override
@@ -219,36 +253,6 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnC
     @Override
     public void onConnectionFail(ConnectionResult result) {
         Toast.makeText(mActivity, "Errore with connection: " + result.getErrorMessage(), Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onData(List<ProximityPOI> proximityList) {
-        mMap.clear();
-
-        for (ProximityPOI poi : proximityList) {
-
-            if (poi.isExpired()) {
-                mMap.addCircle(new CircleOptions()
-                        .center(new LatLng(poi.getLatitude(), poi.getLongitude()))
-                        .radius(ProximityController.RADIUS_METERS)
-                        .strokeWidth(1)
-                        .strokeColor(getContext().getResources().getColor(R.color.disableCircleStroke))
-                        .fillColor(getContext().getResources().getColor(R.color.disableCircleFill))
-                );
-            } else {
-                mMap.addCircle(new CircleOptions()
-                        .center(new LatLng(poi.getLatitude(), poi.getLongitude()))
-                        .radius(ProximityController.RADIUS_METERS)
-                        .strokeWidth(1)
-                        .strokeColor(getContext().getResources().getColor(R.color.activeCircleStroke))
-                        .fillColor(getContext().getResources().getColor(R.color.activeCircleFill))
-                );
-            }
-
-        }
-
-        putMyPosition(false);
-
     }
 
     @Override

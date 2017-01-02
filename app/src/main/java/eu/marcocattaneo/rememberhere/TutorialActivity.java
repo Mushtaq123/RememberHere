@@ -129,6 +129,7 @@ public class TutorialActivity extends BaseActivity implements View.OnClickListen
         @NonNull
         @Override
         public PageOptions provide(int position) {
+
             @LayoutRes int pageLayoutResId;
 
             TransformItem[] tutorialItems = new TransformItem[]{

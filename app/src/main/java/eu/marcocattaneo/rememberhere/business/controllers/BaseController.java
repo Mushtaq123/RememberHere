@@ -3,19 +3,21 @@ package eu.marcocattaneo.rememberhere.business.controllers;
 import android.content.Context;
 import android.support.annotation.Nullable;
 
+import java.util.List;
+
 import eu.marcocattaneo.rememberhere.business.callback.OnQueryResult;
-import eu.marcocattaneo.rememberhere.business.dao.ProximityDao;
 import eu.marcocattaneo.rememberhere.business.dao.ProximityDaoImpl;
+import eu.marcocattaneo.rememberhere.business.dao.ProximityDao;
 import eu.marcocattaneo.rememberhere.business.models.ProximityPOI;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
-public class BaseController implements RealmChangeListener<RealmResults<ProximityPOI>> {
+public class BaseController {
 
     private Context mContext;
 
-    private ProximityDaoImpl proximityDao;
+    private ProximityDao proximityDao;
 
     public BaseController(Context context) {
         this.mContext = context;
@@ -25,27 +27,53 @@ public class BaseController implements RealmChangeListener<RealmResults<Proximit
 
     private RealmResults<ProximityPOI> list;
 
-    private OnQueryResult<ProximityPOI> mOnQueryResult;
+    private RealmResults<ProximityPOI> notifyList;
+
+    private RealmChangeListener<RealmResults<ProximityPOI>> mOnQueryResult;
+
+    private RealmChangeListener<RealmResults<ProximityPOI>> mOnQueryNotifyResult;
 
     /**
      * Find poi sorted by done variable
      *
      * @param onQueryResult
      */
-    public void findProximityPOI(final OnQueryResult<ProximityPOI> onQueryResult) {
-        if (mOnQueryResult == null)
-            mOnQueryResult = onQueryResult;
+    public void findProximityPOI(final RealmChangeListener<RealmResults<ProximityPOI>> onQueryResult) {
+        mOnQueryResult = onQueryResult;
 
         if (list == null) {
             list = getDao().findPoiSorted("done", Sort.ASCENDING);
 
-            list.addChangeListener(this);
+            list.addChangeListener(mOnQueryResult);
         }
 
         // First time
-        onQueryResult.onData(list);
+        mOnQueryResult.onChange(list);
     }
 
+    /**
+     * Find poi sorted by done variable
+     *
+     * @param onQueryResult
+     */
+    public void findProximityPOIUpdates(final RealmChangeListener<RealmResults<ProximityPOI>> onQueryResult) {
+        mOnQueryNotifyResult = onQueryResult;
+
+        if (notifyList == null) {
+            notifyList = getDao().findPoiNotificatioNupdate();
+
+            notifyList.addChangeListener(mOnQueryNotifyResult);
+        }
+
+        // First time
+        mOnQueryNotifyResult.onChange(notifyList);
+    }
+
+    /**
+     * Find Proximity POI by GUID
+     * @param guid
+     * @return
+     */
     public @Nullable ProximityPOI findProximityPOIByGuid(String guid) {
         return getDao().findByGuid(guid);
     }
@@ -56,17 +84,23 @@ public class BaseController implements RealmChangeListener<RealmResults<Proximit
 
     public void onStop() {
         if (list != null)
-            list.removeChangeListener(this);
+            list.removeChangeListener(mOnQueryResult);
         list = null;
+
+        if (notifyList != null)
+            notifyList.removeChangeListener(mOnQueryNotifyResult);
+        notifyList = null;
+
         mOnQueryResult = null;
+        mOnQueryNotifyResult = null;
         proximityDao.close();
     }
 
     public void onStartRealm() {
-        proximityDao = new ProximityDao(mContext);
+        proximityDao = new ProximityDaoImpl(mContext);
     }
 
-    protected ProximityDaoImpl getDao() {
+    protected ProximityDao getDao() {
         return proximityDao;
     }
 
@@ -97,8 +131,4 @@ public class BaseController implements RealmChangeListener<RealmResults<Proximit
         getDao().setExpired(proximityPOI);
     }
 
-    @Override
-    public void onChange(RealmResults<ProximityPOI> element) {
-        mOnQueryResult.onData(element);
-    }
 }

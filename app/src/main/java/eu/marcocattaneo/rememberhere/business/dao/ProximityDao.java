@@ -1,83 +1,25 @@
 package eu.marcocattaneo.rememberhere.business.dao;
 
-import android.content.Context;
-
-import java.util.Date;
-
 import eu.marcocattaneo.rememberhere.business.models.ProximityPOI;
-import io.realm.Realm;
 import io.realm.RealmResults;
 import io.realm.Sort;
 
-public class ProximityDao implements ProximityDaoImpl {
+public interface ProximityDao {
 
-    private Realm mRealm;
+    ProximityPOI create(String guid, String note, int radius, double longitude, double latitude);
 
-    public ProximityDao(Context context) {
-        mRealm = Realm.getDefaultInstance();
-    }
+    void delete(ProximityPOI proximityPOI);
 
-    @Override
-    public ProximityPOI create(String guid, String note, int radius, double latitude, double longitude) {
-        mRealm.beginTransaction();
+    void setDone(ProximityPOI proximityPOI);
 
-        ProximityPOI proximityPOI = mRealm.createObject(ProximityPOI.class, guid);
-        proximityPOI.setLongitude(longitude);
-        proximityPOI.setLatitude(latitude);
-        proximityPOI.setNote(note);
-        proximityPOI.setCreateDate(new Date());
-        proximityPOI.setUpdateDate(new Date());
-        proximityPOI.setExpired(false);
-        proximityPOI.setDone(false);
+    void setExpired(ProximityPOI proximityPOI);
 
-        mRealm.commitTransaction();
-        return proximityPOI;
-    }
+    RealmResults<ProximityPOI> findPoiSorted(String field, Sort sort);
 
-    @Override
-    public void delete(ProximityPOI proximityPOI) {
-        mRealm.beginTransaction();
+    RealmResults<ProximityPOI> findPoiNotificatioNupdate();
 
-        proximityPOI.deleteFromRealm();
+    ProximityPOI findByGuid(String guid);
 
-        mRealm.commitTransaction();
-    }
-
-    @Override
-    public void setDone(ProximityPOI proximityPOI) {
-        mRealm.beginTransaction();
-
-        proximityPOI.setDone(true);
-        proximityPOI.setUpdateDate(new Date());
-
-        mRealm.commitTransaction();
-    }
-
-    @Override
-    public void setExpired(ProximityPOI proximityPOI) {
-        mRealm.beginTransaction();
-
-        proximityPOI.setExpired(true);
-        proximityPOI.setUpdateDate(new Date());
-
-        mRealm.commitTransaction();
-    }
-
-    @Override
-    public RealmResults<ProximityPOI> findPoiSorted(String field, Sort sort) {
-        if (field != null)
-            return mRealm.where(ProximityPOI.class).findAllSorted(field, sort);
-        else
-            return mRealm.where(ProximityPOI.class).findAll();
-    }
-
-    @Override
-    public ProximityPOI findByGuid(String guid) {
-        return mRealm.where(ProximityPOI.class).equalTo("guid", guid).findFirst();
-    }
-
-    public void close() {
-        mRealm.close();
-    }
+    void close();
 
 }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">remember here</string>
+    <string name="app_name" translatable="false">RememberHere</string>
     <string name="title_activity_maps">Map</string>
     <string name="confirm">Continue</string>
     <string name="err_insert">Insert error</string>
@@ -13,7 +13,7 @@
     <string name="confirm_submit">Add</string>
     <string name="hint_note">Reminder</string>
     <string name="search">Search</string>
-    <string name="activity_name">remember here</string>
+    <string name="activity_name" translatable="false">RememberHere</string>
     <string name="task_done">Done</string>
     <string name="no_items">No reminders</string>
     <string name="tutorial_text1">Remember what to do depending on where you are ..</string>
@@ -22,4 +22,8 @@
     <string name="allow">Allow</string>
     <string name="gps_not_avaiable">You need to have GPS enabled</string>
     <string name="enabled">Enable</string>
+    <string name="show_notify">Notifications</string>
+    <string name="string_done">Done</string>
+    <string name="string_undone">Not Done</string>
+    <string name="no_notify">No notifications</string>
 </resources>
