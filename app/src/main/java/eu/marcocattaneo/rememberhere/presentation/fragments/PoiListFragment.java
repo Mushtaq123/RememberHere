@@ -4,7 +4,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -18,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import eu.marcocattaneo.rememberhere.MainActivity;
 import eu.marcocattaneo.rememberhere.R;
@@ -47,6 +51,7 @@ public class PoiListFragment extends BaseFragment implements OnListListener {
     private RecyclerView poiList;
     private LinearLayoutManager mLayoutManager;
     private LinearLayout noItemsLinear;
+    private CoordinatorLayout coordinator;
 
     private ListView notificationList;
 
@@ -57,7 +62,7 @@ public class PoiListFragment extends BaseFragment implements OnListListener {
     private ProximityController controller;
     private PoiAdapter mAdapter;
 
-    private View footerView = null;
+    private TextView no_notify;
 
     private final RealmChangeListener<RealmResults<ProximityPOI>> fullListListener = new RealmChangeListener<RealmResults<ProximityPOI>>() {
 
@@ -67,8 +72,6 @@ public class PoiListFragment extends BaseFragment implements OnListListener {
             if (mAdapter == null) {
                 mAdapter = new PoiAdapter(mActivity, element, PoiListFragment.this);
                 poiList.setAdapter(mAdapter);
-            } else {
-                mAdapter.swapItems(element);
             }
         }
     };
@@ -77,15 +80,12 @@ public class PoiListFragment extends BaseFragment implements OnListListener {
 
         @Override
         public void onChange(RealmResults<ProximityPOI> element) {
+            no_notify.setVisibility(element.size() == 0 ? View.VISIBLE : View.GONE);
+            notificationList.setVisibility(element.size() > 0 ? View.VISIBLE : View.GONE);
             if (element.size() > 0) {
-                if (footerView != null)
-                    notificationList.removeFooterView(footerView);
                 notificationList.setAdapter(new NotificationAdapter(element));
             } else {
                 notificationList.setAdapter(null);
-                if (footerView == null)
-                    footerView = LayoutInflater.from(mActivity).inflate(R.layout.view_nonotify, null);
-                notificationList.addFooterView(footerView);
             }
         }
     };
@@ -112,6 +112,8 @@ public class PoiListFragment extends BaseFragment implements OnListListener {
         noItemsLinear = (LinearLayout) view.findViewById(R.id.no_items);
         drawer = (DrawerLayout) view.findViewById(R.id.drawer_layout);
         notificationList = (ListView) view.findViewById(R.id.notification_list);
+        coordinator = (CoordinatorLayout) view.findViewById(R.id.coordinator);
+        no_notify = (TextView) view.findViewById(R.id.no_notify);
 
         mAddButton = (FloatingActionButton) view.findViewById(R.id.addPoi);
         mAddButton.setOnClickListener(new View.OnClickListener() {
@@ -195,12 +197,13 @@ public class PoiListFragment extends BaseFragment implements OnListListener {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
-                mAdapter.notifyItemRemoved(position);
-
                 // Remove geofence
                 controller.removeGeofence(poi.getGuid());
+
                 // Remove POI on DB
                 controller.delete(poi);
+
+                Snackbar.make(coordinator, getString(R.string.item_deleted), Snackbar.LENGTH_LONG).show();
 
                 checkFabVisiblity();
             }

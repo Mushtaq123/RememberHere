@@ -26,4 +26,5 @@
     <string name="string_done">Done</string>
     <string name="string_undone">Not Done</string>
     <string name="no_notify">No notifications</string>
+    <string name="item_deleted">Promemoria eliminato</string>
 </resources>

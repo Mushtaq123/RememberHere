@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="layout_padding">16dp</dimen>
+    <dimen name="layout_half_padding">8dp</dimen>
     <dimen name="street_pic_h">130dp</dimen>
     <dimen name="no_items_textsize">20dp</dimen>
     <dimen name="tutorial_textsize">19dp</dimen>

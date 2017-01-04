@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.RecyclerView;
+import android.util.ArraySet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,16 +19,23 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.security.Key;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import eu.marcocattaneo.rememberhere.R;
 import eu.marcocattaneo.rememberhere.business.Constants;
 import eu.marcocattaneo.rememberhere.business.callback.OnListListener;
 import eu.marcocattaneo.rememberhere.business.models.ProximityPOI;
 import eu.marcocattaneo.rememberhere.presentation.ui.CoverImageView;
+import io.realm.RealmRecyclerViewAdapter;
 import io.realm.RealmResults;
 
-public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.PoiViewHolder> {
+public class PoiAdapter extends RealmRecyclerViewAdapter<ProximityPOI, PoiAdapter.PoiViewHolder> {
     private List<ProximityPOI> elements;
 
     private OnListListener onClickListener;
@@ -37,12 +45,14 @@ public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.PoiViewHolder> {
     private int lastPosition = -1;
 
     public PoiAdapter(Context context, RealmResults<ProximityPOI> pois, OnListListener onClickListener) {
+        super(context, pois, true);
         this.elements = pois;
         this.onClickListener = onClickListener;
         this.mContext = context;
     }
 
-    public PoiAdapter(List<ProximityPOI> pois) {
+    public PoiAdapter(Context context, RealmResults<ProximityPOI> pois) {
+        super(context, pois, true);
         this.elements = pois;
     }
 
@@ -113,10 +123,28 @@ public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.PoiViewHolder> {
         return position < getItemCount() ? elements.get(position) : null;
     }
 
-    public void swapItems(List<ProximityPOI> data) {
-        elements = data;
-        notifyDataSetChanged();
-    }
+    /*public void swapItems(List<ProximityPOI> data) {
+
+        *//*Map<String, ProximityPOI> mapGuidPOI = new HashMap<>();
+        // New elements contains new data array
+        for (ProximityPOI p : data)
+            mapGuidPOI.put(p.getGuid(), p);
+
+        // Filter new elements and remove updated element and deleted element
+        for (int pos = 0; pos <elements.size(); pos++) {
+
+            if (mapGuidPOI.keySet().contains(elements.get(pos).getGuid())) {
+                // Updated element. Remove It
+                mapGuidPOI.remove(elements.get(pos).getGuid());
+                notifyItemChanged(pos, mapGuidPOI.get(elements.get(pos).getGuid()));
+            } else {
+                // This element stop to exists, Notify as deleted
+                notifyItemRemoved(pos);
+            }
+        }
+
+        elements = data;*//*
+    }*/
 
     public static class PoiViewHolder extends RecyclerView.ViewHolder {
 

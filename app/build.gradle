@@ -54,5 +54,7 @@ dependencies {
     compile 'com.android.support:support-v4:25.0.1'
     compile 'com.cleveroad:slidingtutorial:1.0.6'
     compile 'com.android.support:percent:25.0.1'
+    compile 'io.realm:android-adapters:1.4.0'
+
     testCompile 'junit:junit:4.12'
 }

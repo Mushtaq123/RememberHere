@@ -262,6 +262,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback, OnC
                 Place place = PlaceAutocomplete.getPlace(mActivity, data);
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 15));
+                mMap.addMarker(new MarkerOptions().position(place.getLatLng()).title(place.getName().toString()).icon(getMarkerIcon("#dd6966")));
 
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 Status status = PlaceAutocomplete.getStatus(mActivity, data);
