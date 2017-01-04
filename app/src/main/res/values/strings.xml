@@ -4,7 +4,7 @@
     <string name="confirm">Continue</string>
     <string name="err_insert">Insert error</string>
     <string name="ok_insert">Insert complete</string>
-    <string name="ok_delete">Deleted</string>
+    <string name="ok_delete">Reminder deleted</string>
     <string name="string_note">Add note</string>
     <string name="ok">OK</string>
     <string name="delete">Delete</string>
@@ -26,5 +26,5 @@
     <string name="string_done">Done</string>
     <string name="string_undone">Not Done</string>
     <string name="no_notify">No notifications</string>
-    <string name="item_deleted">Promemoria eliminato</string>
+    <string name="item_deleted">Reminder deleted</string>
 </resources>

@@ -4,7 +4,7 @@
     <string name="confirm">Continua</string>
     <string name="err_insert">Errore nell\'inserimento</string>
     <string name="ok_insert">Inserimento corretto</string>
-    <string name="ok_delete">Promemoria cancellato</string>
+    <string name="ok_delete">Promemoria eliminato</string>
     <string name="string_note">Aggiunti una nota</string>
     <string name="ok">OK</string>
     <string name="delete">Cancella</string>
@@ -25,4 +25,5 @@
     <string name="string_done">Fatto</string>
     <string name="string_undone">Non fatto</string>
     <string name="no_notify">Nessuna notifica</string>
+    <string name="item_deleted">Promemoria eliminato</string>
 </resources>
